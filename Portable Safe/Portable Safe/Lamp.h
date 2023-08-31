@@ -1,35 +1,52 @@
 #pragma once
-#include "Skeleton.h"
 #include <SFML/Graphics.hpp>
+#include "Object.h"
 
 using sf::Color;
 using sf::CircleShape;
 using sf::Vector2f;
 using sf::RenderWindow;
 
-class Lamp
+class Lamp : public Object
 {
 
 public:
 
-	// Конструктор лампочки 
-	Lamp(RenderWindow& window, float radius, Vector2f position);
+	explicit Lamp(RenderWindow& window, float radius, Vector2f position, Color onBackColor, Color onFrontColor, Color offBackColor, Color offFrontColor);
 
-	// Установить цвет лампочки
-	void setColor(Color colorBackground, Color colorBorder);
+	// Проверить является ли позиция в области объекта
+    const bool isArea(const Vector2f& position) const;
 
-	// Перенести лампочку на выбранную позицию
+	// Получить позицию объекта
+	const Vector2f getPosition() const;
+
+	// Получить размеры объекта
+	const Vector2f getSize() const;
+
+	// Получить локальную позицию на объекте
+	const Vector2f getLocalePosition(const Vector2f& position) const;
+
+	// Установить позицию для объекта
 	void setPosition(const Vector2f& position);
 
-	// Отрисовать лампочку
+	// Включить лампочку
+	void On();
+
+	// Выключить лампочку
+	void Off();
+
+	// Отрисовка
 	void Draw();
 
-	// Получить позицию лампочки
-	Vector2f getPosition() const;
-
 private:
-
-	CircleShape circle;
 	RenderWindow& window;
 
+	CircleShape onCircleFront;
+	CircleShape onCircleBack;
+	CircleShape offCircleFront;
+	CircleShape offCircleBack;
+
+	bool condition;
+	Vector2f position;
+	float radius;
 };

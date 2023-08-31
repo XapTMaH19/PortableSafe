@@ -24,12 +24,15 @@
     <ClCompile Include="PortableSafe.cpp">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
+    <ClCompile Include="Body.cpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lamp.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Skeleton.h">
+    <ClInclude Include="Body.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="PortableSafe.h">
@@ -39,6 +42,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMouse.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

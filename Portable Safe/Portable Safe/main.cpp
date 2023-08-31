@@ -4,7 +4,7 @@
 #include "PortableSafe.h"
 #include "Palette.h"
 #include "Lamp.h"
-#include "windows.h"
+#include "Body.h"
 
 using sf::RenderWindow;
 using sf::Event;
@@ -19,7 +19,7 @@ int main()
     ContextSettings settings;
     settings.antialiasingLevel = 8;
     RenderWindow window(sf::VideoMode(1200, 700), "Portable safe", sf::Style::Default, settings);
-    //window.setFramerateLimit(60);
+    window.setFramerateLimit(60);
     window.clear(Palette::white);
 
 
@@ -30,65 +30,50 @@ int main()
     MapWindowPoints(window.getSystemHandle(), HWND_DESKTOP, (POINT*)&rc, 2);
     captionHeight = rc.top - rw.top;*/
 
+    Vector2f beginPos;
+    bool drag = false;
     Event event;
-    PortableSafe pf = PortableSafe(window, {150.f, 300.f});
-    Vector2f localPosition; int mouseXold; int mouseYold;
+    PortableSafe ps = PortableSafe(window);
+    //PortableSafe pf = PortableSafe(window, {150.f, 300.f});
+    //Vector2f localPosition; int mouseXold; int mouseYold;
     while (window.isOpen())
     {
+
         while (window.pollEvent(event))
         {
-            if (window.hasFocus())
+            switch (event.type)
             {
-                if (pf.isArea(window.mapPixelToCoords(Mouse::getPosition(window))))
-                {
-                    
-                    while ((event.type == Event::MouseButtonPressed) && (event.key.code == Mouse::Right))
-                    {
-                        localPosition = pf.getAreaLocalePosition(window.mapPixelToCoords(Mouse::getPosition(window)));
-                        mouseXold = event.mouseButton.x;
-                        mouseYold = event.mouseButton.y;
-                        //if (pf.getPosition().x >= 0)
-                        {
-                            while (event.type == Event::MouseButtonPressed)
-                            {
-                                window.pollEvent(event);
-                            }
-                            while ((event.type != Event::MouseButtonReleased) && (event.type == Event::MouseMoved))
-                            {
-                                if ((event.mouseButton.x != mouseXold) || (event.mouseButton.y != mouseYold))
-                                {
-                                    pf.setPosition(window.mapPixelToCoords(Mouse::getPosition(window)) - localPosition);
-                                    mouseXold = event.mouseButton.x;
-                                    mouseYold = event.mouseButton.y;
-                                }
-                                else
-                                {
-                                    std::cout << "0" << std::endl;
-                                }
-                                window.pollEvent(event);
-                            }
-                        }
-                        window.pollEvent(event);
-                    }
-                }
-            }
-
-            //window.pollEvent(event);
-            //if (event.type == Event::MouseMoved) //(event.type != Event::MouseButtonReleased)&&
-            //{
-            //    Sleep(200);
-            //    std::cout << "1" << std::endl;
-            //}
-            //else
-            //{
-            //    Sleep(200);
-            //    std::cout << "0" << std::endl;
-            //}
-            if (event.type == Event::Closed)
+            case Event::Closed:
             {
                 window.close();
+                break;
             }
-        }        
+            case Event::MouseButtonPressed:
+            {
+                if ((event.key.code == Mouse::Left) && (ps.isArea(window.mapPixelToCoords(Mouse::getPosition(window)))))
+                {
+                    ps.LeftClicPressed();
+                }
+                break;
+            }
+            case Event::MouseButtonReleased:
+            {
+                if ((event.key.code == Mouse::Left) && (ps.isArea(window.mapPixelToCoords(Mouse::getPosition(window)))))
+                {
+                    ps.LeftClicReleased();
+                }
+                break;
+            }
+            }            
+        }
+  
+        if (ps.getDragOn())
+        {
+            ps.MoveWithMouse();
+        }
+        window.clear(Palette::white);
+        ps.Draw();
+        window.display();
     }
     return 0;
 }

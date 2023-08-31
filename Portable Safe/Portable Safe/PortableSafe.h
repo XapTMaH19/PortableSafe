@@ -1,53 +1,49 @@
 #pragma once
-#include "Object.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Skeleton.h"
+#include "InterfaceMouse.h"
+#include "Body.h"
 #include "Lamp.h"
-#include "Palette.h"
+
 
 using sf::Vector2i;
+using sf::Vector2u;
 using std::vector;
 using sf::RenderWindow;
 using sf::RectangleShape;
 using sf::WindowHandle;
+using sf::Mouse;
 
-class PortableSafe : public Object
+class PortableSafe : public InterfaceMouse
 {
 public:
-	// Создать переносной сейф в окне
-	explicit PortableSafe(RenderWindow& window, Vector2f sizes = { 300.f, 550.f }, Vector2f position = {0.f, 0.f}, bool padlock = false);
-	explicit PortableSafe(RenderWindow& window, Vector2f sizes, Vector2f position, vector<int> password);
 
-	// Проверка позиции на вхождение в область сейфа
-	virtual bool isArea(const Vector2f& position) const override;
+	PortableSafe(RenderWindow& win, Vector2f sizes, Vector2f position);
 
-	// Найти локальную точку в области сейфа
-	virtual Vector2f getAreaLocalePosition(const Vector2f& position) const override;
+	// По умолчанию
+	PortableSafe(RenderWindow& win);
 
-	// Подвинуть сейф
-	void setPosition(const Vector2f& position);
+	// Проверить является ли позиция в области тела
+	const bool isArea(const Vector2f& position) const ;
 
-	// Получить позицию сейфа
-	Vector2f getPosition();
+	// Отрисовка
+	void Draw();
 
-	// Получить размеры сейфа
-	Vector2f getSize();
+	// Левый клик по телу
+	void LeftClicPressed() override;
 
-private:
-	bool padlock;
-	float left;
-	float right;
-	float top;
-	float bottom;
-	Skeleton scelet;
-	RenderWindow& window;
-	Vector2f sizes;
-	Lamp lampPadlock;
-	RectangleShape clearRectangle;
-	RectangleShape backgroundRectangle;
-	vector<int> password;
-	void Update();
-	void setCoord(const Vector2f& position);
+	// Отпускаем левый клик с тела
+	void LeftClicReleased() override;
+
+	// Получить нажат ли левый клик на тело
+	bool getDragOn() override;
+
+	// Подвинуть объект вместе с мышкой
+	void MoveWithMouse() override;
 	
+private:
+	
+	RenderWindow& win;
+
+	Body body;
 };
